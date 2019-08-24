@@ -7,7 +7,7 @@ import dev.sasikanth.nasa.apod.data.APod
 import dev.sasikanth.nasa.apod.data.NetworkState
 import dev.sasikanth.nasa.apod.data.source.local.APodDao
 import dev.sasikanth.nasa.apod.data.source.remote.APodApiService
-import dev.sasikanth.nasa.apod.utils.DateFormatter
+import dev.sasikanth.nasa.apod.utils.DateUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -56,11 +56,11 @@ class APodBoundaryCallback(
             }
 
             // Getting 20 days worth of images at a time
-            val endDate = DateFormatter.formatDate(calendar.time)
+            val endDate = DateUtils.formatDate(calendar.time)
             calendar.add(Calendar.DAY_OF_MONTH, -20)
             if (calendar >= limitCal) {
                 networkState.postValue(NetworkState.LOADING)
-                val startDate = DateFormatter.formatDate(calendar.time)
+                val startDate = DateUtils.formatDate(calendar.time)
                 try {
                     // Getting images and filtering them so that only image type are saved into db
                     val aPods = remoteSource.getAPods(BuildConfig.API_KEY, startDate, endDate)

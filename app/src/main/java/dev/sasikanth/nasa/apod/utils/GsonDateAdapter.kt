@@ -16,7 +16,7 @@ class GsonDateAdapter : JsonDeserializer<Date> {
         context: JsonDeserializationContext?
     ): Date {
         try {
-            return DateFormatter.parseDate(json!!.asString)
+            return DateUtils.parseDate(json!!.asString)
         } catch (e: ParseException) {
             throw JsonParseException(e)
         }

@@ -7,7 +7,8 @@ import dev.sasikanth.nasa.apod.BuildConfig
 import dev.sasikanth.nasa.apod.data.APod
 import dev.sasikanth.nasa.apod.data.source.local.APodDao
 import dev.sasikanth.nasa.apod.data.source.remote.APodApiService
-import dev.sasikanth.nasa.apod.utils.DateFormatter
+import dev.sasikanth.nasa.apod.utils.DateUtils
+import dev.sasikanth.nasa.apod.utils.isAfter
 import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
@@ -25,24 +26,20 @@ class APodRepository
     val networkState = aPodBoundaryCallback.networkState
 
     suspend fun getLatestAPod() {
-        val currentCal = Calendar.getInstance()
-        val currentDay = currentCal.get(Calendar.DAY_OF_MONTH)
-
+        val currentCal = Calendar.getInstance(DateUtils.americanTimeZone)
         val lastLatestAPod = localService.getLatestAPodDate()
         if (lastLatestAPod != null) {
-            val lastLatestDay = Calendar.getInstance().apply {
-                time = lastLatestAPod
-            }.get(Calendar.DAY_OF_MONTH)
-
-            if (currentDay > lastLatestDay) {
+            if (currentCal.time.isAfter(lastLatestAPod)) {
                 // Load latest APod from API
-                val currentDate = DateFormatter.formatDate(currentCal.time)
+                val currentDate = DateUtils.formatDate(currentCal.time)
                 try {
                     val latestApod = remoteService.getAPod(BuildConfig.API_KEY, currentDate)
                     localService.insertAPod(latestApod)
                 } catch (e: Exception) {
                     Timber.e(e.localizedMessage)
                 }
+            } else {
+                Timber.d("Latest picture is already loaded!")
             }
         }
     }
