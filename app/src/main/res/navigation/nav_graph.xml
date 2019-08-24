@@ -22,5 +22,18 @@
         android:id="@+id/viewerFragment"
         android:name="dev.sasikanth.nasa.apod.ui.pages.viewer.ViewerFragment"
         android:label=" "
-        tools:layout="@layout/fragment_viewer" />
+        tools:layout="@layout/fragment_viewer">
+        <action
+            android:id="@+id/actionPictureInformation"
+            app:destination="@id/pictureInformation" />
+    </fragment>
+    <dialog
+        android:id="@+id/pictureInformation"
+        android:name="dev.sasikanth.nasa.apod.ui.pages.viewer.PictureInformationSheet"
+        android:label=" "
+        tools:layout="@layout/picture_information_sheet">
+        <argument
+            android:name="aPod"
+            app:argType="dev.sasikanth.nasa.apod.data.APod" />
+    </dialog>
 </navigation>

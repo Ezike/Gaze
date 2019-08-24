@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -12,51 +13,64 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import dev.sasikanth.nasa.apod.R
 import dev.sasikanth.nasa.apod.data.APod
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+
+@BindingAdapter(
+    "isVisibleOn"
+)
+fun View.isVisibleOn(
+    isVisible: Boolean
+) {
+    this.isVisible = isVisible
+}
 
 @BindingAdapter(
     "aPodFormattedDate"
 )
 fun AppCompatTextView.setFormattedDate(
-    aPod: APod?
+    date: Date?
 ) {
-    aPod?.let {
+    date?.let {
         val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
-        text = dateFormat.format(it.date)
+        text = dateFormat.format(it)
     }
 }
 
 @BindingAdapter(
-    "aPodImage",
-    "thumbnailOnly",
-    requireAll = true
+    "aPodThumbnail"
 )
-fun ImageView.setImageUrl(
-    aPod: APod?,
-    thumbnailOnly: Boolean
+fun ImageView.loadThumbnail(
+    aPod: APod?
 ) {
     aPod?.let {
-        if (thumbnailOnly) {
-            GlideApp.with(this)
-                .load(it.thumbnailUrl)
-                .transition(DrawableTransitionOptions().crossFade())
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .placeholder(R.drawable.ic_image_loading)
-                .error(R.drawable.ic_image_error)
-                .into(this)
-        } else {
-            GlideApp.with(this)
-                .load(it.hdUrl)
-                .thumbnail(
-                    GlideApp.with(this)
-                        .load(it.thumbnailUrl)
-                )
-                .transition(DrawableTransitionOptions().crossFade())
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .placeholder(R.drawable.ic_image_loading)
-                .error(R.drawable.ic_image_error)
-                .into(this)
-        }
+        GlideApp.with(this)
+            .load(it.thumbnailUrl)
+            .transition(DrawableTransitionOptions().crossFade())
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .placeholder(R.drawable.ic_image_loading)
+            .error(R.drawable.ic_image_error)
+            .into(this)
+    }
+}
+
+// Can be combined with above one with multiple binding adapter values,
+// personal preference for separation. Some hdurl and thumbnails have different aspect ratios
+// so glide isn't scaling them properly when loaded with .thumbnail()
+@BindingAdapter(
+    "aPodImage"
+)
+fun ImageView.setImageUrl(
+    aPod: APod?
+) {
+    aPod?.let {
+        GlideApp.with(this)
+            .load(aPod.hdUrl)
+            .transition(DrawableTransitionOptions().crossFade())
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .placeholder(R.drawable.ic_image_loading)
+            .error(R.drawable.ic_image_error)
+            .into(this)
     }
 }
 

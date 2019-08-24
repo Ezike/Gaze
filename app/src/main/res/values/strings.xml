@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Gaze</string>
     <string name="picture_copyright">© %1$s</string>
+    <string name="cd_picture_information">Picture information</string>
 </resources>

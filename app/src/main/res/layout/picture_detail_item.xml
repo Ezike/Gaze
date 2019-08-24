@@ -19,12 +19,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@null"
-            app:aPodImage="@{aPod}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:thumbnailOnly="@{false}"
+            app:aPodImage="@{aPod}"
             tools:src="@tools:sample/backgrounds/scenic" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

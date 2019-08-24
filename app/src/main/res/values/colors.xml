@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorSecondary">#4285f4</color>
 
-    <color name="dividerColor">#303030</color>
+    <color name="cardStrokeColor">#303030</color>
+    <color name="dividerColor">#4D909090</color>
     <color name="navBarColor">#33000000</color>
 </resources>

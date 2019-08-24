@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import dev.sasikanth.nasa.apod.data.APod
 import dev.sasikanth.nasa.apod.databinding.FragmentViewerBinding
 import dev.sasikanth.nasa.apod.di.misc.activityViewModels
 import dev.sasikanth.nasa.apod.di.misc.injector
@@ -18,7 +18,12 @@ import dev.sasikanth.nasa.apod.ui.MainViewModel
 import dev.sasikanth.nasa.apod.ui.adapters.ViewerAdapter
 import dev.sasikanth.nasa.apod.utils.ZoomOutPageTransformer
 
-class ViewerFragment : Fragment() {
+// This can be moved into viewmodel as an single event live data
+interface PictureInformationListener {
+    fun showPictureInformation(aPod: APod)
+}
+
+class ViewerFragment : Fragment(), PictureInformationListener {
 
     private val viewModel: MainViewModel by activityViewModels {
         requireActivity().injector.mainViewModel
@@ -37,6 +42,9 @@ class ViewerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentViewerBinding.inflate(inflater)
+        binding.pictureInformationListener = this
+        binding.lifecycleOwner = this
+
         val viewerAdapter = ViewerAdapter()
 
         binding.apodsViewer.apply {
@@ -50,7 +58,6 @@ class ViewerFragment : Fragment() {
                     val currentAPod = viewModel.aPods.value?.get(MainActivity.currentPosition)
                     binding.aPod = currentAPod
                     binding.executePendingBindings()
-                    binding.pictureCopyright.isVisible = currentAPod?.copyright != null
                 }
             })
         }
@@ -65,5 +72,9 @@ class ViewerFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun showPictureInformation(aPod: APod) {
+        findNavController().navigate(ViewerFragmentDirections.actionPictureInformation(aPod))
     }
 }
