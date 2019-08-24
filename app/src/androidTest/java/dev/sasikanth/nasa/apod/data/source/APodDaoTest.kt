@@ -12,6 +12,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Calendar
 
 @RunWith(AndroidJUnit4::class)
 class APodDaoTest {
@@ -31,8 +32,10 @@ class APodDaoTest {
 
     @Test
     fun insertAndRetrieveAPod() {
+        val calendar = Calendar.getInstance()
+        calendar.set(2019, 8, 22)
         val aPod = APod(
-            date = "2019-08-22",
+            date = calendar.time,
             title = "Nearby Spiral Galaxy NGC 4945",
             explanation = "Large spiral galaxy NGC 4945 is seen edge-on near the center of this cosmic galaxy portrait. In fact, it's almost the size of our Milky Way Galaxy. NGC 4945's own dusty disk, young blue star clusters, and pink star forming regions standout in the sharp, colorful telescopic image. About 13 million light-years distant toward the expansive southern constellation Centaurus, NGC 4945 is only about six times farther away than Andromeda, the nearest large spiral galaxy to the Milky Way. Though this galaxy's central region is largely hidden from view for optical telescopes, X-ray and infrared observations indicate significant high energy emission and star formation in the core of NGC 4945. Its obscured but active nucleus qualifies the gorgeous island universe as a Seyfert galaxy and home to a central supermassive black hole.",
             copyright = "Martin Pugh",
