@@ -47,7 +47,7 @@ class ViewerAdapter : PagedListAdapter<APod, ViewerAdapter.ViewerItemHolder>(VIE
         }
 
         fun imageViewScaleType(scaleType: ImageView.ScaleType) {
-            binding.apodImage.scaleType =  scaleType
+            binding.apodImage.scaleType = scaleType
         }
     }
 }

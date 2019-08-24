@@ -8,7 +8,6 @@ import java.lang.reflect.Type
 import java.text.ParseException
 import java.util.Date
 
-
 class GsonDateAdapter : JsonDeserializer<Date> {
 
     override fun deserialize(
@@ -21,6 +20,5 @@ class GsonDateAdapter : JsonDeserializer<Date> {
         } catch (e: ParseException) {
             throw JsonParseException(e)
         }
-
     }
 }

@@ -1,3 +1,7 @@
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.24.2"
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -36,7 +40,15 @@ android {
     dataBinding {
         enabled = true
     }
+}
 
+spotless {
+    kotlin {
+        target("**/*.kt")
+        ktlint()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
 
 dependencies {
