@@ -9,5 +9,18 @@
         android:id="@+id/picturesGridFragment"
         android:name="dev.sasikanth.nasa.apod.ui.pages.grid.PicturesGridFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_pictures_grid" />
+        tools:layout="@layout/fragment_pictures_grid">
+        <action
+            android:id="@+id/actionShowPicture"
+            app:destination="@id/viewerFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewerFragment"
+        android:name="dev.sasikanth.nasa.apod.ui.pages.viewer.ViewerFragment"
+        android:label=" "
+        tools:layout="@layout/fragment_viewer" />
 </navigation>

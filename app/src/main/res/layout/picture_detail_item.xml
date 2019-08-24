@@ -3,29 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="aPod"
+            type="dev.sasikanth.nasa.apod.data.APod" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.pages.grid.PicturesGridFragment">
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/apods_grid"
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/apod_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:padding="2dp"
-            android:scrollbars="vertical"
-            android:splitMotionEvents="false"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:contentDescription="@null"
+            app:aPodImage="@{aPod}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:paddingTopSystemWindowInsets="@{true}"
-            app:paddingBottomSystemWindowInsets="@{true}"
-            app:spanCount="2"
-            tools:itemCount="10"
-            tools:listitem="@layout/picture_item" />
+            app:thumbnailOnly="@{false}"
+            tools:src="@tools:sample/backgrounds/scenic" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

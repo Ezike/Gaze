@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4285f4</color>
-    <color name="colorPrimaryDark">#3d62cd</color>
-    <color name="colorSecondary">#f4b042</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorSecondary">#4285f4</color>
+
+    <color name="dividerColor">#303030</color>
+    <color name="navBarColor">#33000000</color>
 </resources>

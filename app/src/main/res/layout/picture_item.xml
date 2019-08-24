@@ -8,13 +8,26 @@
         <variable
             name="aPod"
             type="dev.sasikanth.nasa.apod.data.APod" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="aPodItemListener"
+            type="dev.sasikanth.nasa.apod.ui.adapters.APodItemListener" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
-        app:cardCornerRadius="2dp">
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{() -> aPodItemListener.click(position)}"
+        app:cardCornerRadius="4dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/dividerColor">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -23,9 +36,12 @@
             <ImageView
                 android:id="@+id/apod_image"
                 android:layout_width="0dp"
-                android:layout_height="200dp"
+                android:layout_height="0dp"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
+                app:aPodImage="@{aPod}"
+                app:thumbnailOnly="@{true}"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

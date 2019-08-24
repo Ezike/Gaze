@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NASA APod</string>
+
+    <string name="picture_copyright">© %1$s</string>
 </resources>
