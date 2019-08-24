@@ -1,6 +1,5 @@
 package dev.sasikanth.nasa.apod.data.source
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -9,6 +8,7 @@ import dev.sasikanth.nasa.apod.data.APod
 import dev.sasikanth.nasa.apod.data.source.local.APodDao
 import dev.sasikanth.nasa.apod.data.source.remote.APodApiService
 import dev.sasikanth.nasa.apod.utils.DateFormatter
+import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -41,7 +41,7 @@ class APodRepository
                     val latestApod = remoteService.getAPod(BuildConfig.API_KEY, currentDate)
                     localService.insertAPod(latestApod)
                 } catch (e: Exception) {
-                    Log.e("APodRepository", e.localizedMessage)
+                    Timber.e(e.localizedMessage)
                 }
             }
         }
