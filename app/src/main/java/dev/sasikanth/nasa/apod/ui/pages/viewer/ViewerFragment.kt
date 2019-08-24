@@ -56,8 +56,10 @@ class ViewerFragment : Fragment(), PictureInformationListener {
                     super.onPageSelected(position)
                     MainActivity.currentPosition = position
                     val currentAPod = viewModel.aPods.value?.get(MainActivity.currentPosition)
-                    binding.aPod = currentAPod
-                    binding.executePendingBindings()
+                    if (currentAPod != null) {
+                        binding.aPod = currentAPod
+                        binding.executePendingBindings()
+                    }
                 }
             })
         }

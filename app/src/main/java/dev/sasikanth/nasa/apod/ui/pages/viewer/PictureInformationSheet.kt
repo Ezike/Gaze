@@ -35,9 +35,9 @@ class PictureInformationSheet : BottomSheetDialogFragment() {
         val binding = PictureInformationSheetBinding.inflate(inflater)
         binding.aPod = args.aPod
 
-//        binding.closePictureInformation.setOnClickListener {
-//            dismiss()
-//        }
+        binding.closePictureInformation.setOnClickListener {
+            dismiss()
+        }
         return binding.root
     }
 }

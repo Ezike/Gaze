@@ -48,8 +48,6 @@ class APodRepository
         // PagedList config
         val pagedListConfig = PagedList.Config.Builder()
             .setPageSize(20)
-            .setPrefetchDistance(10)
-            .setEnablePlaceholders(false)
             .build()
 
         // Building LivePagedList
