@@ -12,16 +12,18 @@ def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
     defaultConfig {
         applicationId "dev.sasikanth.nasa.apod"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+
         buildConfigField "String", "API_KEY", localProperties['apiKey']
     }
     buildTypes {
@@ -66,7 +68,7 @@ dependencies {
 
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:${room_version}"
 
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
