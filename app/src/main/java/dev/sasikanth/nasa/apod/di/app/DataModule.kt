@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -64,6 +65,5 @@ object DataModule {
     @JvmStatic
     @Singleton
     @Provides
-    fun providesAPodApiService(retrofit: Retrofit): APodApiService =
-        retrofit.create(APodApiService::class.java)
+    fun providesAPodApiService(retrofit: Retrofit): APodApiService = retrofit.create()
 }

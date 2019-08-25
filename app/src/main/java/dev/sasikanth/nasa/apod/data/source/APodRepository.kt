@@ -9,6 +9,8 @@ import dev.sasikanth.nasa.apod.data.source.local.APodDao
 import dev.sasikanth.nasa.apod.data.source.remote.APodApiService
 import dev.sasikanth.nasa.apod.utils.DateUtils
 import dev.sasikanth.nasa.apod.utils.isAfter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
@@ -26,6 +28,10 @@ class APodRepository
     val networkState = aPodBoundaryCallback.networkState
 
     suspend fun getLatestAPod() {
+        // I could probably move this in onItemAtFrontLoaded of BoundaryCallback.
+        // But I wanted to avoid checking every time top the page is reached.
+        // This method is only called and checked every time MainViewModel is created,
+        // so essentially when app is first opened.
         val currentCal = Calendar.getInstance(DateUtils.americanTimeZone)
         val lastLatestAPod = localService.getLatestAPodDate()
         if (lastLatestAPod != null) {
@@ -33,7 +39,9 @@ class APodRepository
                 // Load latest APod from API
                 val currentDate = DateUtils.formatDate(currentCal.time)
                 try {
-                    val latestApod = remoteService.getAPod(BuildConfig.API_KEY, currentDate)
+                    val latestApod = withContext(Dispatchers.IO) {
+                        remoteService.getAPod(BuildConfig.API_KEY, currentDate)
+                    }
                     localService.insertAPod(latestApod)
                 } catch (e: Exception) {
                     Timber.e(e.localizedMessage)

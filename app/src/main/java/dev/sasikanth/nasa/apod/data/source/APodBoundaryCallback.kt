@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 import java.util.Date
 
@@ -63,8 +64,20 @@ class APodBoundaryCallback(
                 val startDate = DateUtils.formatDate(calendar.time)
                 try {
                     // Getting images and filtering them so that only image type are saved into db
-                    val aPods = remoteSource.getAPods(BuildConfig.API_KEY, startDate, endDate)
-                    localSource.insertAPod(*aPods.filter { it.mediaType == "image" }.toTypedArray())
+                    val pictures = withContext(Dispatchers.IO) {
+                        // Just to be safe making the suspended retrofit call into separate dispatcher
+                        // room will automatically use io executor from android architecture components
+                        // so no need for moving it manually into separate dispatcher;
+                        remoteSource.getAPods(
+                            BuildConfig.API_KEY,
+                            startDate,
+                            endDate
+                        )
+                    }
+                    localSource.insertAPod(
+                        *pictures.filter { it.mediaType == "image" }
+                            .toTypedArray()
+                    )
                     networkState.postValue(NetworkState.LOADED)
                 } catch (e: Exception) {
                     networkState.postValue(NetworkState.error(e.localizedMessage))
