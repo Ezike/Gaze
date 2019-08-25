@@ -34,8 +34,12 @@ class APodRepository
         // so essentially when app is first opened.
         val currentCal = Calendar.getInstance(DateUtils.americanTimeZone)
         val lastLatestAPod = localService.getLatestAPodDate()
+
         if (lastLatestAPod != null) {
-            if (currentCal.time.isAfter(lastLatestAPod)) {
+            val lastLatestAPodCal = Calendar.getInstance().apply {
+                time = lastLatestAPod
+            }
+            if (currentCal.isAfter(lastLatestAPodCal)) {
                 // Load latest APod from API
                 val currentDate = DateUtils.formatDate(currentCal.time)
                 try {
