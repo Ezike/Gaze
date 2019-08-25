@@ -17,13 +17,13 @@ import javax.inject.Inject
 
 class APodRepository
 @Inject constructor(
-    private val localService: APodDao,
-    private val remoteService: APodApiService
+    private val localSource: APodDao,
+    private val remoteSource: APodApiService
 ) {
 
     private val aPodBoundaryCallback = APodBoundaryCallback(
-        localSource = localService,
-        remoteSource = remoteService
+        localSource = localSource,
+        remoteSource = remoteSource
     )
     val networkState = aPodBoundaryCallback.networkState
 
@@ -33,7 +33,7 @@ class APodRepository
         // This method is only called and checked every time MainViewModel is created,
         // so essentially when app is first opened.
         val currentCal = Calendar.getInstance(DateUtils.americanTimeZone)
-        val lastLatestAPod = localService.getLatestAPodDate()
+        val lastLatestAPod = localSource.getLatestAPodDate()
 
         if (lastLatestAPod != null) {
             val lastLatestAPodCal = Calendar.getInstance().apply {
@@ -47,11 +47,11 @@ class APodRepository
                 val currentDate = DateUtils.formatDate(currentCal.time)
                 try {
                     val latestApod = withContext(Dispatchers.IO) {
-                        remoteService.getAPod(BuildConfig.API_KEY, currentDate)
+                        remoteSource.getAPod(BuildConfig.API_KEY, currentDate)
                     }
                     // Making sure we are only saving APod if the media type is image
                     if (latestApod.mediaType == "image") {
-                        localService.insertAPod(latestApod)
+                        localSource.insertAPod(latestApod)
                     }
                 } catch (e: Exception) {
                     Timber.e(e.localizedMessage)
@@ -71,7 +71,7 @@ class APodRepository
             .build()
 
         // Building LivePagedList
-        return LivePagedListBuilder(localService.getAPods(), pagedListConfig)
+        return LivePagedListBuilder(localSource.getAPods(), pagedListConfig)
             .setBoundaryCallback(aPodBoundaryCallback)
             .build()
     }
