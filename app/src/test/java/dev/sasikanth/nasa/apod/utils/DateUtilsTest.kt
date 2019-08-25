@@ -44,4 +44,16 @@ class DateUtilsTest {
 
         assertTrue(cal1.isAfter(cal2))
     }
+
+    @Test
+    fun `cal1 is after cal2 with different timezone`() {
+        val cal1 = Calendar.getInstance(DateUtils.americanTimeZone)
+        val cal2 = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_MONTH, 23)
+            set(Calendar.MONTH, Calendar.AUGUST)
+            set(Calendar.YEAR, 2019)
+        }
+
+        assertTrue(cal1.isAfter(cal2))
+    }
 }
