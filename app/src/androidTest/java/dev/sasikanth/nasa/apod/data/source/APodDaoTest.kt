@@ -9,6 +9,7 @@ import dev.sasikanth.nasa.apod.data.source.local.APodDatabase
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -54,6 +55,35 @@ class APodDaoTest {
                     assertEquals(aPod.title, it.title)
                 }
             }
+        }
+    }
+
+    @Test
+    fun insertAndRetrieveAnotherNotPresentAPod() {
+        val calendar = Calendar.getInstance().apply {
+            set(2019, 8, 24)
+        }
+
+        val fetchDate = Calendar.getInstance().apply {
+            set(2019, 8, 22)
+        }
+
+        val aPod = APod(
+            date = calendar.time,
+            title = "Shiny star",
+            explanation = "Shiny star is shiny.",
+            copyright = "Sasikanth Miriyampalli",
+            mediaType = "image",
+            serviceVersion = "v1",
+            thumbnailUrl = "https://apod.nasa.gov/apod/image/1908/NGC4945_HaLRGB.jpg",
+            hdUrl = "https://apod.nasa.gov/apod/image/1908/NGC4945_HaLRGB.jpg"
+        )
+
+        runBlocking {
+            // Insert APod
+            aPodDao.insertAPod(aPod)
+            // Retrieve a different pond, that is not present
+            assertNull(aPodDao.getAPod(fetchDate.time))
         }
     }
 
