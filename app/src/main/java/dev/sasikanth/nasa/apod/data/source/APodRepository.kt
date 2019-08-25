@@ -58,8 +58,12 @@ class APodRepository
 
     fun getAPods(): LiveData<PagedList<APod>> {
         // PagedList config
+        // While it's recommended to have prefetch distance as large as possible compared
+        // to page size. In order to avoid calling API calls even before reaching end, I have
+        // set prefetch distance to 10
         val pagedListConfig = PagedList.Config.Builder()
             .setPageSize(20)
+            .setPrefetchDistance(10)
             .build()
 
         // Building LivePagedList
