@@ -39,6 +39,9 @@ class APodRepository
             val lastLatestAPodCal = Calendar.getInstance().apply {
                 time = lastLatestAPod
             }
+
+            // Request latest picture only if current date is greater than
+            // last saved date.
             if (currentCal.isAfter(lastLatestAPodCal)) {
                 // Load latest APod from API
                 val currentDate = DateUtils.formatDate(currentCal.time)
@@ -46,12 +49,13 @@ class APodRepository
                     val latestApod = withContext(Dispatchers.IO) {
                         remoteService.getAPod(BuildConfig.API_KEY, currentDate)
                     }
-                    localService.insertAPod(latestApod)
+                    // Making sure we are only saving APod if the media type is image
+                    if (latestApod.mediaType == "image") {
+                        localService.insertAPod(latestApod)
+                    }
                 } catch (e: Exception) {
                     Timber.e(e.localizedMessage)
                 }
-            } else {
-                Timber.d("Latest picture is already loaded!")
             }
         }
     }

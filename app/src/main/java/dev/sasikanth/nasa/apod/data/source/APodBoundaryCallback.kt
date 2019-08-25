@@ -25,6 +25,8 @@ class APodBoundaryCallback(
 
     private val uiScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
+    private var isLoading = false
+
     // No items are present, load data from API
     override fun onZeroItemsLoaded() {
         super.onZeroItemsLoaded()
@@ -38,7 +40,9 @@ class APodBoundaryCallback(
     }
 
     private fun getAndSaveAPodRange(date: Date?) {
+        if (isLoading) return
         uiScope.launch {
+            isLoading = true
             // Getting calendar instance for current date
             val calendar = Calendar.getInstance()
 
@@ -85,6 +89,7 @@ class APodBoundaryCallback(
             } else {
                 networkState.postValue(NetworkState.LOADED)
             }
+            isLoading = false
         }
     }
 }
