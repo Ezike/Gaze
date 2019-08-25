@@ -12,9 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import dev.sasikanth.nasa.apod.R
 import dev.sasikanth.nasa.apod.data.APod
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 @BindingAdapter(
     "isVisibleOn"
@@ -32,8 +30,7 @@ fun AppCompatTextView.setFormattedDate(
     date: Date?
 ) {
     date?.let {
-        val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
-        text = dateFormat.format(it)
+        text = DateUtils.formatToAppDate(it)
     }
 }
 

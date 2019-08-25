@@ -11,8 +11,11 @@ object DateUtils {
     private val americanDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US).apply {
         timeZone = americanTimeZone
     }
+    private val appDateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
 
     fun formatDate(date: Date): String = americanDateFormat.format(date)
+
+    fun formatToAppDate(date: Date): String = appDateFormat.format(date)
 
     fun parseDate(date: String): Date = americanDateFormat.parse(date)!!
 }
