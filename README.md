@@ -1,4 +1,4 @@
-# Gaze - Astronomy picture of the day
+# Gaze - Astronomy Picture of the Day
 
 Android app to display astronomy picture of the day provided by NASA 
 open API (https://api.nasa.gov/api.html#apod)
