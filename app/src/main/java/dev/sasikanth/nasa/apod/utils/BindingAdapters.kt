@@ -46,6 +46,7 @@ fun ImageView.loadThumbnail(
     aPod?.let {
         GlideApp.with(this)
             .load(it.thumbnailUrl)
+            .sizeMultiplier(0.5f)
             .transition(DrawableTransitionOptions().crossFade())
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .placeholder(R.drawable.ic_image_loading)
