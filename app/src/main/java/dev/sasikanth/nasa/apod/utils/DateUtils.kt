@@ -14,7 +14,7 @@ object DateUtils {
 
     fun formatDate(date: Date): String = americanDateFormat.format(date)
 
-    fun parseDate(date: String): Date = americanDateFormat.parse(date)
+    fun parseDate(date: String): Date = americanDateFormat.parse(date)!!
 }
 
 fun Date.isAfter(date: Date): Boolean {
