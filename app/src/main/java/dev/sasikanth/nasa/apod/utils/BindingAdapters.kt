@@ -45,6 +45,7 @@ fun ImageView.loadThumbnail(
         load(it.thumbnailUrl) {
             placeholder(R.drawable.ic_image_loading)
             error(R.drawable.ic_image_error)
+            size(500)
         }
     }
 }
