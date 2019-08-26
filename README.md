@@ -16,7 +16,7 @@ You can create an API key here (https://api.nasa.gov/index.html#apply-for-an-api
 - Coroutines
 - Android Architecture Components (ViewModel, LiveData, Room, Paging, Navigation)
 - Retrofit
-- Glide
+- Coil
 - Dagger
 - Timber
 - PhotoView

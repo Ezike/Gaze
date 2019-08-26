@@ -8,8 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.databinding.BindingAdapter
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import coil.api.load
 import dev.sasikanth.nasa.apod.R
 import dev.sasikanth.nasa.apod.data.APod
 import java.util.Date
@@ -41,14 +40,12 @@ fun ImageView.loadThumbnail(
     aPod: APod?
 ) {
     aPod?.let {
-        GlideApp.with(this)
-            .load(it.thumbnailUrl)
-            .sizeMultiplier(0.5f)
-            .transition(DrawableTransitionOptions().crossFade())
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .placeholder(R.drawable.ic_image_loading)
-            .error(R.drawable.ic_image_error)
-            .into(this)
+        // Load it.hdUrl if you want to load original image in grid as well, it would
+        // allow us to preload the image in detail view and cross fade it to original image
+        load(it.thumbnailUrl) {
+            placeholder(R.drawable.ic_image_loading)
+            error(R.drawable.ic_image_error)
+        }
     }
 }
 
@@ -62,13 +59,11 @@ fun ImageView.setImageUrl(
     aPod: APod?
 ) {
     aPod?.let {
-        GlideApp.with(this)
-            .load(aPod.hdUrl)
-            .transition(DrawableTransitionOptions().crossFade())
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .placeholder(R.drawable.ic_image_loading)
-            .error(R.drawable.ic_image_error)
-            .into(this)
+        load(it.hdUrl) {
+            crossfade(true)
+            placeholder(R.drawable.ic_image_loading)
+            error(R.drawable.ic_image_error)
+        }
     }
 }
 
