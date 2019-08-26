@@ -79,8 +79,7 @@ class APodBoundaryCallback(
                         )
                     }
                     localSource.insertAPod(
-                        *pictures.filter { it.mediaType == "image" }
-                            .toTypedArray()
+                        *pictures.toTypedArray()
                     )
                     networkState.postValue(NetworkState.LOADED)
                 } catch (e: Exception) {

@@ -50,9 +50,7 @@ class APodRepository
                         remoteSource.getAPod(BuildConfig.API_KEY, currentDate)
                     }
                     // Making sure we are only saving APod if the media type is image
-                    if (latestApod.mediaType == "image") {
-                        localSource.insertAPod(latestApod)
-                    }
+                    localSource.insertAPod(latestApod)
                 } catch (e: Exception) {
                     Timber.e(e.localizedMessage)
                 }
