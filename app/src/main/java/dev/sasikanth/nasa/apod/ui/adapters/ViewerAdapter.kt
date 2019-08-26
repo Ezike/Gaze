@@ -2,7 +2,6 @@ package dev.sasikanth.nasa.apod.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -44,10 +43,6 @@ class ViewerAdapter : PagedListAdapter<APod, ViewerAdapter.ViewerItemHolder>(VIE
         fun bind(aPod: APod?) {
             binding.aPod = aPod
             binding.executePendingBindings()
-        }
-
-        fun imageViewScaleType(scaleType: ImageView.ScaleType) {
-            binding.apodImage.scaleType = scaleType
         }
     }
 }
