@@ -36,6 +36,21 @@
             app:marginLeftSystemWindowInsets="@{true}"
             app:marginTopSystemWindowInsets="@{true}" />
 
+        <ImageView
+            android:id="@+id/download_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/cd_picture_download"
+            android:focusable="true"
+            android:onClick="@{() -> pictureInformationListener.downloadImage(aPod.title, aPod.hdUrl)}"
+            android:padding="16dp"
+            app:marginRightSystemWindowInsets="@{true}"
+            app:marginTopSystemWindowInsets="@{true}"
+            app:srcCompat="@drawable/ic_cloud_download" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/picture_information_header"
             android:layout_width="match_parent"
