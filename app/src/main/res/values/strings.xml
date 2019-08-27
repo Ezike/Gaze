@@ -8,4 +8,9 @@
     <string name="notification_download_desc">Download in progress</string>
     <string name="notification_download_desc_success">Downloaded</string>
     <string name="notification_download_desc_fail">Failed to download image, try again</string>
+    <string name="error_unknown">(%1$d) Unknown error</string>
+    <string name="error_bad_format">Bad request, incorrect fields are passed</string>
+    <string name="error_not_found">Page not found ¯\\_(ツ)_/¯</string>
+    <string name="error_server">Server issue</string>
+    <string name="exception_unknown">Unknown exception</string>
 </resources>

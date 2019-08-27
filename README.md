@@ -1,6 +1,6 @@
 # Gaze - Astronomy Picture of the Day
 
-[![Build Status](https://app.bitrise.io/app/79e0e8f2591b6283/status.svg?token=bK1IOhLlMsXKxCbcRu_Q4g&branch=master)](https://app.bitrise.io/app/79e0e8f2591b6283)
+[![Build Status](https://app.bitrise.io/app/853995ed3d3c2237/status.svg?token=MAzKpCsm4buYxmznXLOXSw&branch=master)](https://app.bitrise.io/app/853995ed3d3c2237)
 
 Android app to display astronomy picture of the day provided by NASA 
 open API (https://api.nasa.gov/api.html#apod)

@@ -1,10 +1,7 @@
 package dev.sasikanth.nasa.apod.ui.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -12,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.sasikanth.nasa.apod.R
 import dev.sasikanth.nasa.apod.data.APod
 import dev.sasikanth.nasa.apod.data.NetworkState
-import dev.sasikanth.nasa.apod.data.Status
+import dev.sasikanth.nasa.apod.databinding.NetworkStateItemBinding
 import dev.sasikanth.nasa.apod.databinding.PictureItemBinding
 
 private val APOD_DIFF = object : DiffUtil.ItemCallback<APod>() {
@@ -36,7 +33,7 @@ class APodsGridAdapter(
 
     private var networkState: NetworkState? = null
 
-    private fun hasExtraRow() = networkState != null && networkState != NetworkState.LOADED
+    private fun hasExtraRow() = networkState != null && networkState !is NetworkState.Success
 
     fun setLoadingState(networkState: NetworkState) {
         val previousState = this.networkState
@@ -103,24 +100,48 @@ class APodsGridAdapter(
     }
 
     class NetworkStateItemViewHolder private constructor(
-        itemView: View
-    ) : RecyclerView.ViewHolder(itemView) {
+        private val binding: NetworkStateItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         companion object {
             fun from(parent: ViewGroup): NetworkStateItemViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.network_state_item, parent, false)
-                return NetworkStateItemViewHolder(view)
+                val binding = NetworkStateItemBinding.inflate(layoutInflater, parent, false)
+                return NetworkStateItemViewHolder(binding)
             }
         }
 
-        private val progressBar: ProgressBar = itemView.findViewById(R.id.progress_bar)
-        private val errMessage: AppCompatTextView = itemView.findViewById(R.id.err_msg)
-
         fun bind(networkState: NetworkState?) {
-            progressBar.isVisible = networkState?.status == Status.LOADING
-            errMessage.isVisible = networkState?.msg != null
-            errMessage.text = networkState?.msg
+            binding.apply {
+                progressBar.isVisible = false
+                errorMessage.isVisible = true
+
+                when (networkState) {
+                    is NetworkState.UnknownError -> {
+                        errorMessage.text = itemView.context.getString(
+                            R.string.error_unknown,
+                            networkState.errorCode
+                        )
+                    }
+                    is NetworkState.BadRequestError -> {
+                        errorMessage.setText(R.string.error_bad_format)
+                    }
+                    is NetworkState.NotFoundError -> {
+                        errorMessage.setText(R.string.error_not_found)
+                    }
+                    is NetworkState.ServerError -> {
+                        errorMessage.setText(R.string.error_server)
+                    }
+                    is NetworkState.Exception -> {
+                        errorMessage.text = networkState.message
+                            ?: itemView.context.getString(R.string.exception_unknown)
+                    }
+                    else -> {
+                        progressBar.isVisible = true
+                        errorMessage.isVisible = false
+                    }
+                }
+            }
         }
     }
 }

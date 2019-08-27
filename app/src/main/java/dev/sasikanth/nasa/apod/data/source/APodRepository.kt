@@ -46,11 +46,16 @@ class APodRepository
                 // Load latest APod from API
                 val currentDate = DateUtils.formatDate(currentCal.time)
                 try {
-                    val latestApod = withContext(Dispatchers.IO) {
+                    val aPodResponse = withContext(Dispatchers.IO) {
                         remoteSource.getAPod(BuildConfig.API_KEY, currentDate)
                     }
-                    // Making sure we are only saving APod if the media type is image
-                    localSource.insertAPod(latestApod)
+                    if (aPodResponse.isSuccessful) {
+                        val latestApod = aPodResponse.body()
+                        // Ignoring null since db is our source of truth, data won't change
+                        if (latestApod != null) {
+                            localSource.insertAPod(latestApod)
+                        }
+                    }
                 } catch (e: Exception) {
                     Timber.e(e.localizedMessage)
                 }

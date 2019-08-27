@@ -64,11 +64,11 @@ class APodBoundaryCallback(
             val endDate = DateUtils.formatDate(calendar.time)
             calendar.add(Calendar.DAY_OF_MONTH, -20)
             if (calendar >= limitCal) {
-                networkState.postValue(NetworkState.LOADING)
+                networkState.postValue(NetworkState.Loading)
                 val startDate = DateUtils.formatDate(calendar.time)
                 try {
                     // Getting images and filtering them so that only image type are saved into db
-                    val pictures = withContext(Dispatchers.IO) {
+                    val picturesResponse = withContext(Dispatchers.IO) {
                         // Just to be safe making the suspended retrofit call into separate dispatcher
                         // room will automatically use io executor from android architecture components
                         // so no need for moving it manually into separate dispatcher;
@@ -78,15 +78,34 @@ class APodBoundaryCallback(
                             endDate
                         )
                     }
-                    localSource.insertAPod(
-                        *pictures.toTypedArray()
-                    )
-                    networkState.postValue(NetworkState.LOADED)
+                    if (picturesResponse.isSuccessful) {
+                        localSource.insertAPod(
+                            *picturesResponse.body().orEmpty().toTypedArray()
+                        )
+                        networkState.postValue(NetworkState.Success)
+                    } else {
+                        when (picturesResponse.code()) {
+                            400 -> {
+                                networkState.postValue(NetworkState.BadRequestError)
+                            }
+                            404 -> {
+                                networkState.postValue(NetworkState.NotFoundError)
+                            }
+                            500 -> {
+                                networkState.postValue(NetworkState.ServerError)
+                            }
+                            else -> {
+                                networkState.postValue(
+                                    NetworkState.UnknownError(picturesResponse.code())
+                                )
+                            }
+                        }
+                    }
                 } catch (e: Exception) {
-                    networkState.postValue(NetworkState.error(e.localizedMessage))
+                    networkState.postValue(NetworkState.Exception(e.localizedMessage))
                 }
             } else {
-                networkState.postValue(NetworkState.LOADED)
+                networkState.postValue(NetworkState.Success)
             }
             isLoading = false
         }
