@@ -4,4 +4,8 @@
     <string name="cd_picture_information">Picture information</string>
     <string name="cd_picture_download">Download picture</string>
     <string name="channel_name">Downloads</string>
+    <string name="notification_download_title">Downloading picture</string>
+    <string name="notification_download_desc">Download in progress</string>
+    <string name="notification_download_desc_success">Downloaded</string>
+    <string name="notification_download_desc_fail">Failed to download image, try again</string>
 </resources>
