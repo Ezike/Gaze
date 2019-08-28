@@ -1,44 +1,37 @@
 package dev.sasikanth.nasa.apod.utils
 
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.databinding.BindingAdapter
 import coil.api.load
+import com.google.android.material.card.MaterialCardView
 import dev.sasikanth.nasa.apod.R
 import dev.sasikanth.nasa.apod.data.APod
+import dev.sasikanth.nasa.apod.data.NetworkState
+import dev.sasikanth.nasa.apod.utils.extensions.dpToPx
 import java.util.Date
 
-@BindingAdapter(
-    "isVisibleOn"
-)
-fun View.isVisibleOn(
-    isVisible: Boolean
-) {
+@BindingAdapter("isVisibleOn")
+fun View.isVisibleOn(isVisible: Boolean) {
     this.isVisible = isVisible
 }
 
-@BindingAdapter(
-    "aPodFormattedDate"
-)
-fun AppCompatTextView.setFormattedDate(
-    date: Date?
-) {
+@BindingAdapter("aPodFormattedDate")
+fun AppCompatTextView.setFormattedDate(date: Date?) {
     date?.let {
         text = DateUtils.formatToAppDate(it)
     }
 }
 
-@BindingAdapter(
-    "aPodThumbnail"
-)
-fun ImageView.loadThumbnail(
-    aPod: APod?
-) {
+@BindingAdapter("aPodThumbnail")
+fun ImageView.loadThumbnail(aPod: APod?) {
     aPod?.let {
         // Load it.hdUrl if you want to load original image in grid as well, it would
         // allow us to preload the image in detail view and cross fade it to original image
@@ -53,17 +46,75 @@ fun ImageView.loadThumbnail(
 // Can be combined with above one with multiple binding adapter values,
 // personal preference for separation. Some hdurl and thumbnails have different aspect ratios
 // so glide isn't scaling them properly when loaded with .thumbnail()
-@BindingAdapter(
-    "aPodImage"
-)
-fun ImageView.setImageUrl(
-    aPod: APod?
-) {
+@BindingAdapter("aPodImage")
+fun ImageView.setImageUrl(aPod: APod?) {
     aPod?.let {
         load(it.hdUrl) {
             crossfade(true)
             placeholder(R.drawable.ic_image_loading)
             error(R.drawable.ic_image_error)
+        }
+    }
+}
+
+@BindingAdapter("networkStateCard")
+fun MaterialCardView.setNetworkState(networkState: NetworkState?) {
+    if (networkState is NetworkState.Loading) {
+        cardElevation = 0f
+        setCardBackgroundColor(Color.TRANSPARENT)
+    } else {
+        cardElevation = 24.dpToPx().toFloat()
+        setCardBackgroundColor(Color.WHITE)
+    }
+}
+
+@BindingAdapter("networkStateProgress")
+fun ProgressBar.setNetworkState(networkState: NetworkState?) {
+    when (networkState) {
+        is NetworkState.BadRequestError,
+        is NetworkState.NotFoundError,
+        is NetworkState.ServerError,
+        is NetworkState.UnknownError,
+        is NetworkState.Exception,
+        is NetworkState.Success,
+        null -> {
+            this.isVisible = false
+        }
+        is NetworkState.Loading -> {
+            this.isVisible = true
+        }
+    }
+}
+
+@BindingAdapter("networkStateError")
+fun AppCompatTextView.setNetworkState(networkState: NetworkState?) {
+    when (networkState) {
+        is NetworkState.UnknownError -> {
+            isVisible = true
+            text = context.getString(
+                R.string.error_unknown,
+                networkState.errorCode
+            )
+        }
+        is NetworkState.BadRequestError -> {
+            isVisible = true
+            setText(R.string.error_bad_format)
+        }
+        is NetworkState.NotFoundError -> {
+            isVisible = true
+            setText(R.string.error_not_found)
+        }
+        is NetworkState.ServerError -> {
+            isVisible = true
+            setText(R.string.error_server)
+        }
+        is NetworkState.Exception -> {
+            isVisible = true
+            text = networkState.message
+                ?: context.getString(R.string.exception_unknown)
+        }
+        else -> {
+            isVisible = false
         }
     }
 }

@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="networkState"
+            type="dev.sasikanth.nasa.apod.data.NetworkState" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -16,7 +19,8 @@
         android:layout_marginBottom="4dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="4dp"
-        app:cardElevation="24dp">
+        app:cardElevation="24dp"
+        app:networkStateCard="@{networkState}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -30,7 +34,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:networkStateProgress="@{networkState}" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/error_message"
@@ -48,6 +53,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:lineHeight="24sp"
+                app:networkStateError="@{networkState}"
                 tools:text="Failed to load data" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

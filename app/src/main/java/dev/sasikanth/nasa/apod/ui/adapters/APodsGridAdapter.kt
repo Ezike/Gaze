@@ -2,11 +2,9 @@ package dev.sasikanth.nasa.apod.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import dev.sasikanth.nasa.apod.R
 import dev.sasikanth.nasa.apod.data.APod
 import dev.sasikanth.nasa.apod.data.NetworkState
 import dev.sasikanth.nasa.apod.databinding.NetworkStateItemBinding
@@ -112,36 +110,8 @@ class APodsGridAdapter(
         }
 
         fun bind(networkState: NetworkState?) {
-            binding.apply {
-                progressBar.isVisible = false
-                errorMessage.isVisible = true
-
-                when (networkState) {
-                    is NetworkState.UnknownError -> {
-                        errorMessage.text = itemView.context.getString(
-                            R.string.error_unknown,
-                            networkState.errorCode
-                        )
-                    }
-                    is NetworkState.BadRequestError -> {
-                        errorMessage.setText(R.string.error_bad_format)
-                    }
-                    is NetworkState.NotFoundError -> {
-                        errorMessage.setText(R.string.error_not_found)
-                    }
-                    is NetworkState.ServerError -> {
-                        errorMessage.setText(R.string.error_server)
-                    }
-                    is NetworkState.Exception -> {
-                        errorMessage.text = networkState.message
-                            ?: itemView.context.getString(R.string.exception_unknown)
-                    }
-                    else -> {
-                        progressBar.isVisible = true
-                        errorMessage.isVisible = false
-                    }
-                }
-            }
+            binding.networkState = networkState
+            binding.executePendingBindings()
         }
     }
 }
