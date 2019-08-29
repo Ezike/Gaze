@@ -1,6 +1,8 @@
 package dev.sasikanth.nasa.apod.utils
 
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Calendar
@@ -55,5 +57,58 @@ class DateUtilsTest {
         }
 
         assertTrue(cal1.isAfter(cal2))
+    }
+
+    /**
+     * Check if the given date is formatted as yyyy-MM-dd
+     */
+    @Test
+    fun `check if date is formatted to given format`() {
+        val cal = Calendar.getInstance()
+        val formattedDate = DateUtils.formatDate(cal.time)
+        // Doing a general regex check for yyyy-MM-dd format
+        val regexPattern = "^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$"
+
+        assertTrue(formattedDate.matches(Regex(regexPattern)))
+    }
+
+    /**
+     * Check if the given date is formatted as MM/dd/yyyy
+     */
+    @Test
+    fun `check if date is formatted to app format`() {
+        val cal = Calendar.getInstance()
+        val formattedDate = DateUtils.formatToAppDate(cal.time)
+        val regexPattern = "^(0[1-9]|1[012])/(0[1-9]|[12][0-9]|3[01])/\\d{4}$"
+
+        assertTrue(formattedDate.matches(Regex(regexPattern)))
+    }
+
+    /**
+     * Parse yyyy-MM-dd formatted string into date object
+     */
+    @Test
+    fun `parse correct formatted string`() {
+        val formattedDate = "2019-02-14"
+        val date = try {
+            DateUtils.parseDate(formattedDate)
+        } catch (e: Exception) {
+            null
+        }
+        assertNotNull(date)
+    }
+
+    /**
+     * Parse wrongly formatted string
+     */
+    @Test
+    fun `parse wrongly formatted string`() {
+        val formattedDate = "02/14/1994"
+        val date = try {
+            DateUtils.parseDate(formattedDate)
+        } catch (e: Exception) {
+            null
+        }
+        assertNull(date)
     }
 }
