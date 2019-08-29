@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dev.sasikanth.nasa.apod.databinding.FragmentPicturesGridBinding
 import dev.sasikanth.nasa.apod.di.misc.activityViewModels
 import dev.sasikanth.nasa.apod.di.misc.injector
@@ -43,16 +44,32 @@ class PicturesGridFragment : Fragment() {
             MainActivity.currentPosition = position
             findNavController().navigate(PicturesGridFragmentDirections.actionShowPicture())
         })
-        binding.apodsGrid.adapter = adapter
-        val layoutManager = binding.apodsGrid.layoutManager as GridLayoutManager
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (adapter.getItemViewType(position) == APodsGridAdapter.LOADING_ITEM) {
-                    2
-                } else {
-                    1
+        binding.apodsGrid.apply {
+            this.adapter = adapter
+
+            val layoutManager = binding.apodsGrid.layoutManager as GridLayoutManager
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (adapter.getItemViewType(position) == APodsGridAdapter.LOADING_ITEM) {
+                        2
+                    } else {
+                        1
+                    }
                 }
             }
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                // Inorder to save the scroll position on orientation change
+                // we are getting first visible item position from the GridLayoutManager
+                // and setting it as current position
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
+                    if (firstVisiblePosition != RecyclerView.NO_POSITION) {
+                        MainActivity.currentPosition = firstVisiblePosition
+                    }
+                }
+            })
         }
 
         mainViewModel.aPods.observe(viewLifecycleOwner, Observer { pagedList ->
