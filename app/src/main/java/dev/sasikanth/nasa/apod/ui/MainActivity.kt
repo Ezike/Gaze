@@ -8,11 +8,8 @@ import androidx.navigation.findNavController
 import dev.sasikanth.nasa.apod.R
 import dev.sasikanth.nasa.apod.databinding.ActivityMainBinding
 import dev.sasikanth.nasa.apod.di.misc.injector
-import dev.sasikanth.nasa.apod.di.misc.viewModels
 
 class MainActivity : AppCompatActivity() {
-
-    private val mainViewModel: MainViewModel by viewModels { injector.mainViewModel }
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController

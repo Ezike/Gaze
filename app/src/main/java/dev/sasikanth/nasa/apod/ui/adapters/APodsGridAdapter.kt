@@ -33,7 +33,7 @@ class APodsGridAdapter(
 
     private fun hasExtraRow() = networkState != null && networkState !is NetworkState.Success
 
-    fun setLoadingState(networkState: NetworkState) {
+    fun setNetworkState(networkState: NetworkState) {
         val previousState = this.networkState
         val hadExtraRow = hasExtraRow()
         this.networkState = networkState

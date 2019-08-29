@@ -21,7 +21,7 @@ import dev.sasikanth.nasa.apod.ui.adapters.APodsGridAdapter
 
 class PicturesGridFragment : Fragment() {
 
-    private val mainViewModel: MainViewModel by activityViewModels {
+    private val viewModel: MainViewModel by activityViewModels {
         requireActivity().injector.mainViewModel
     }
 
@@ -44,6 +44,7 @@ class PicturesGridFragment : Fragment() {
             MainActivity.currentPosition = position
             findNavController().navigate(PicturesGridFragmentDirections.actionShowPicture())
         })
+
         binding.apodsGrid.apply {
             this.adapter = adapter
 
@@ -72,11 +73,12 @@ class PicturesGridFragment : Fragment() {
             })
         }
 
-        mainViewModel.aPods.observe(viewLifecycleOwner, Observer { pagedList ->
+        viewModel.aPods.observe(viewLifecycleOwner, Observer { pagedList ->
             adapter.submitList(pagedList)
         })
-        mainViewModel.networkState.observe(viewLifecycleOwner, Observer { loadingState ->
-            adapter.setLoadingState(loadingState)
+
+        viewModel.networkState.observe(viewLifecycleOwner, Observer { networkState ->
+            adapter.setNetworkState(networkState)
         })
 
         return binding.root
