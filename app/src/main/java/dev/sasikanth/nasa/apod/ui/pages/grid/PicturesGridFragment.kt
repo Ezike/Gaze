@@ -21,7 +21,7 @@ import dev.sasikanth.nasa.apod.ui.adapters.APodsGridAdapter
 
 class PicturesGridFragment : Fragment() {
 
-    private val mainViewModel: MainViewModel by activityViewModels {
+    private val viewModel: MainViewModel by activityViewModels {
         requireActivity().injector.mainViewModel
     }
 
@@ -45,6 +45,7 @@ class PicturesGridFragment : Fragment() {
 
             findNavController().navigate(PicturesGridFragmentDirections.actionShowPicture(), extras)
         })
+
         binding.apodsGrid.apply {
             this.adapter = adapter
 
@@ -65,9 +66,12 @@ class PicturesGridFragment : Fragment() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
+
                     if (firstVisiblePosition != RecyclerView.NO_POSITION) {
                         mainViewModel.setPosition(firstVisiblePosition)
                     }
+                    MainActivity.currentPosition = firstVisiblePosition
+
                 }
             })
 
@@ -81,11 +85,12 @@ class PicturesGridFragment : Fragment() {
 
         }
 
-        mainViewModel.aPods.observe(viewLifecycleOwner, Observer { pagedList ->
+        viewModel.aPods.observe(viewLifecycleOwner, Observer { pagedList ->
             adapter.submitList(pagedList)
         })
-        mainViewModel.networkState.observe(viewLifecycleOwner, Observer { loadingState ->
-            adapter.setLoadingState(loadingState)
+
+        viewModel.networkState.observe(viewLifecycleOwner, Observer { networkState ->
+            adapter.setNetworkState(networkState)
         })
 
         return binding.root

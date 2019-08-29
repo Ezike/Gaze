@@ -8,17 +8,22 @@ import androidx.navigation.findNavController
 import dev.sasikanth.nasa.apod.R
 import dev.sasikanth.nasa.apod.databinding.ActivityMainBinding
 import dev.sasikanth.nasa.apod.di.misc.injector
-import dev.sasikanth.nasa.apod.di.misc.viewModels
 
 class MainActivity : AppCompatActivity() {
-
-    private val mainViewModel: MainViewModel by viewModels { injector.mainViewModel }
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
     companion object {
         private const val KEY_CURRENT_POSITION = "apod_current_position"
+
+        var currentPosition = 0
+            set(value) {
+                // Making sure we are not setting a negative value as current position
+                if (value >= 0) {
+                    field = value
+                }
+            }
 
     }
 
