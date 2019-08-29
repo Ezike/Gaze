@@ -21,6 +21,14 @@ class MainViewModel
     val downloadEvent = SingleLiveEvent<APod>()
     val showInfoEvent = SingleLiveEvent<APod>()
 
+    private var currentPosition = 0
+        set(value) {
+            // Making sure we are not setting a negative value as current position
+            if (value >= 0) {
+                field = value
+            }
+        }
+
     init {
         viewModelScope.launch {
             aPodRepository.getLatestAPod()
@@ -34,4 +42,12 @@ class MainViewModel
     fun showImageInfo() {
         showInfoEvent.call()
     }
+
+    fun setPosition(i: Int) {
+        currentPosition = i
+    }
+
+    fun getPosition(): Int = currentPosition
+
+    fun getCurrentAPod(): APod? = aPods.value?.get(getPosition())
 }

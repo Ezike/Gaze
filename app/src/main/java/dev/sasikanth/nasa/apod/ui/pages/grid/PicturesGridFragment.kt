@@ -41,7 +41,7 @@ class PicturesGridFragment : Fragment() {
 
         val adapter = APodsGridAdapter(APodItemListener { position, extras ->
             // Navigate to picture view
-            MainActivity.currentPosition = position
+            mainViewModel.setPosition(position)
 
             findNavController().navigate(PicturesGridFragmentDirections.actionShowPicture(), extras)
         })
@@ -66,7 +66,7 @@ class PicturesGridFragment : Fragment() {
                     super.onScrolled(recyclerView, dx, dy)
                     val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
                     if (firstVisiblePosition != RecyclerView.NO_POSITION) {
-                        MainActivity.currentPosition = firstVisiblePosition
+                        mainViewModel.setPosition(firstVisiblePosition)
                     }
                 }
             })
@@ -99,12 +99,12 @@ class PicturesGridFragment : Fragment() {
     private fun scrollToPosition() {
         binding.apodsGrid.doOnLayout {
             val layoutManager = binding.apodsGrid.layoutManager
-            val viewAtPosition = layoutManager?.findViewByPosition(MainActivity.currentPosition)
+            val viewAtPosition = layoutManager?.findViewByPosition(mainViewModel.getPosition())
             if (viewAtPosition == null || layoutManager
                     .isViewPartiallyVisible(viewAtPosition, false, true)
             ) {
                 binding.apodsGrid.post {
-                    layoutManager?.scrollToPosition(MainActivity.currentPosition)
+                    layoutManager?.scrollToPosition(mainViewModel.getPosition())
                 }
             }
         }

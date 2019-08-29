@@ -20,14 +20,18 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val KEY_CURRENT_POSITION = "apod_current_position"
 
-        var currentPosition = 0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injector.inject(this)
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
-            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0)
+            mainViewModel.setPosition(
+                savedInstanceState.getInt(
+                    KEY_CURRENT_POSITION,
+                    0
+                )
+            )
         }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         navController = findNavController(R.id.main_host_fragment)
@@ -35,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(KEY_CURRENT_POSITION, currentPosition)
+        outState.putInt(KEY_CURRENT_POSITION, mainViewModel.getPosition())
     }
 
     override fun onSupportNavigateUp(): Boolean {

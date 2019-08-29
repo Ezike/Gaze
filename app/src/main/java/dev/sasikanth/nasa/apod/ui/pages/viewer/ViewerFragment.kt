@@ -9,18 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.databinding.library.baseAdapters.BR.mainViewModel
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
+import dev.sasikanth.nasa.apod.BR.mainViewModel
 import dev.sasikanth.nasa.apod.data.APod
 import dev.sasikanth.nasa.apod.databinding.FragmentViewerBinding
 import dev.sasikanth.nasa.apod.di.misc.activityViewModels
 import dev.sasikanth.nasa.apod.di.misc.injector
 import dev.sasikanth.nasa.apod.services.PictureDownloadService
-import dev.sasikanth.nasa.apod.ui.MainActivity
 import dev.sasikanth.nasa.apod.ui.MainViewModel
 import dev.sasikanth.nasa.apod.ui.adapters.ViewerAdapter
 import dev.sasikanth.nasa.apod.utils.ZoomOutPageTransformer
@@ -71,8 +70,8 @@ class ViewerFragment : Fragment() {
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    MainActivity.currentPosition = position
-                    val currentAPod = viewModel.aPods.value?.get(MainActivity.currentPosition)
+                    viewModel.setPosition(position)
+                    val currentAPod = viewModel.getCurrentAPod()
                     if (currentAPod != null) {
                         binding.aPod = currentAPod
                         binding.executePendingBindings()
@@ -87,22 +86,13 @@ class ViewerFragment : Fragment() {
 
         viewModel.aPods.observe(viewLifecycleOwner, Observer {
             viewerAdapter.submitList(it)
-            binding.apodsViewer.setCurrentItem(MainActivity.currentPosition, false)
+            binding.apodsViewer.setCurrentItem(viewModel.getPosition(), false)
         })
 
-        binding.apodsViewer.transitionName = "${MainActivity.currentPosition}"
+        binding.apodsViewer.transitionName = "${viewModel.getPosition()}"
 
-        observe(viewModel.downloadEvent) {
-            binding.aPod?.let {
-                downloadImage(it.title, it.hdUrl)
-            }
-        }
-
-        observe(viewModel.showInfoEvent) {
-            binding.aPod?.let {
-                showPictureInformation(it)
-            }
-        }
+        observe(viewModel.downloadEvent) { downloadImage(binding.aPod) }
+        observe(viewModel.showInfoEvent) { showPictureInformation(binding.aPod) }
 
         return binding.root
     }
@@ -130,18 +120,24 @@ class ViewerFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun showPictureInformation(aPod: APod) {
-        findNavController().navigate(ViewerFragmentDirections.actionPictureInformation(aPod))
+    private fun showPictureInformation(aPod: APod?) {
+        aPod?.let {
+            findNavController().navigate(ViewerFragmentDirections.actionPictureInformation(it))
+        }
+
     }
 
-    private fun downloadImage(pictureName: String, downloadUrl: String?) {
-        if (allPermissionsGranted()) {
-            // Storage permission is granted, trigger download service
-            PictureDownloadService.startService(requireContext(), pictureName, downloadUrl)
-        } else {
-            // Storage permission is not given, show dialog and ask for permission
-            requestPermissions(PERMISSIONS, STORAGE_PERMISSION_REQUEST_CODE)
+    private fun downloadImage(aPod: APod?) {
+        aPod?.let {
+            if (allPermissionsGranted()) {
+                // Storage permission is granted, trigger download service
+                PictureDownloadService.startService(requireContext(), it.title, it.hdUrl)
+            } else {
+                // Storage permission is not given, show dialog and ask for permission
+                requestPermissions(PERMISSIONS, STORAGE_PERMISSION_REQUEST_CODE)
+            }
         }
+
     }
 
     private fun allPermissionsGranted(): Boolean {
