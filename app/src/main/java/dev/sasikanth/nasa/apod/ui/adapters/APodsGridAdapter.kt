@@ -2,6 +2,8 @@ package dev.sasikanth.nasa.apod.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -90,6 +92,14 @@ class APodsGridAdapter(
         }
 
         fun bind(aPod: APod?, aPodItemListener: APodItemListener) {
+
+            var extras = FragmentNavigatorExtras()
+
+            aPod?.let {
+                binding.root.transitionName = "$adapterPosition"
+                extras = FragmentNavigatorExtras(binding.root to "$adapterPosition")
+            }
+            binding.extras = extras
             binding.aPod = aPod
             binding.position = adapterPosition
             binding.aPodItemListener = aPodItemListener
@@ -116,8 +126,8 @@ class APodsGridAdapter(
     }
 }
 
-class APodItemListener(val onClick: (position: Int) -> Unit) {
-    fun click(position: Int) {
-        onClick(position)
+class APodItemListener(val onClick: (position: Int, FragmentNavigator.Extras) -> Unit) {
+    fun click(position: Int, extras: FragmentNavigator.Extras) {
+        onClick(position, extras)
     }
 }

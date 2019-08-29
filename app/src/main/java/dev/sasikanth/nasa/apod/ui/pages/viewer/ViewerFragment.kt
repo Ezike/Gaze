@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import dev.sasikanth.nasa.apod.data.APod
 import dev.sasikanth.nasa.apod.databinding.FragmentViewerBinding
@@ -41,6 +42,13 @@ class ViewerFragment : Fragment(), PictureInformationListener {
     }
 
     private lateinit var binding: FragmentViewerBinding
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+    }
 
     override fun onAttach(context: Context) {
         requireActivity().injector.inject(this)
@@ -84,9 +92,11 @@ class ViewerFragment : Fragment(), PictureInformationListener {
             binding.apodsViewer.setCurrentItem(MainActivity.currentPosition, false)
         })
 
+        binding.apodsViewer.transitionName = "${MainActivity.currentPosition}"
+
         return binding.root
     }
-
+    
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

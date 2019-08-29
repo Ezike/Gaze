@@ -16,15 +16,20 @@
         <variable
             name="aPodItemListener"
             type="dev.sasikanth.nasa.apod.ui.adapters.APodItemListener" />
+
+        <variable
+            name="extras"
+            type="androidx.navigation.fragment.FragmentNavigator.Extras" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="@{() -> aPodItemListener.click(position)}"
+        android:onClick="@{() -> aPodItemListener.click(position, extras)}"
         app:cardCornerRadius="4dp"
         app:strokeColor="@color/cardStrokeColor"
         app:strokeWidth="1dp">

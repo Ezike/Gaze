@@ -39,10 +39,11 @@ class PicturesGridFragment : Fragment() {
     ): View? {
         binding = FragmentPicturesGridBinding.inflate(inflater)
 
-        val adapter = APodsGridAdapter(APodItemListener { position ->
+        val adapter = APodsGridAdapter(APodItemListener { position, extras ->
             // Navigate to picture view
             MainActivity.currentPosition = position
-            findNavController().navigate(PicturesGridFragmentDirections.actionShowPicture())
+
+            findNavController().navigate(PicturesGridFragmentDirections.actionShowPicture(), extras)
         })
         binding.apodsGrid.apply {
             this.adapter = adapter
@@ -57,7 +58,6 @@ class PicturesGridFragment : Fragment() {
                     }
                 }
             }
-
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 // Inorder to save the scroll position on orientation change
                 // we are getting first visible item position from the GridLayoutManager
@@ -70,6 +70,15 @@ class PicturesGridFragment : Fragment() {
                     }
                 }
             })
+
+            postponeEnterTransition()
+            viewTreeObserver
+                .addOnPreDrawListener {
+                    startPostponedEnterTransition()
+                    true
+
+                }
+
         }
 
         mainViewModel.aPods.observe(viewLifecycleOwner, Observer { pagedList ->
