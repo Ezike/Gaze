@@ -18,6 +18,12 @@ class MainActivity : AppCompatActivity() {
         private const val KEY_CURRENT_POSITION = "apod_current_position"
 
         var currentPosition = 0
+            set(value) {
+                // Making sure we are not setting a negative value as current position
+                if (value >= 0) {
+                    field = value
+                }
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

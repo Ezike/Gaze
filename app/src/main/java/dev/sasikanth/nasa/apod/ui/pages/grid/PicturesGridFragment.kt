@@ -66,9 +66,7 @@ class PicturesGridFragment : Fragment() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
-                    if (firstVisiblePosition != RecyclerView.NO_POSITION) {
-                        MainActivity.currentPosition = firstVisiblePosition
-                    }
+                    MainActivity.currentPosition = firstVisiblePosition
                 }
             })
         }
