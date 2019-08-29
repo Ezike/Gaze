@@ -10,8 +10,9 @@
             type="dev.sasikanth.nasa.apod.data.APod" />
 
         <variable
-            name="pictureInformationListener"
-            type="dev.sasikanth.nasa.apod.ui.pages.viewer.PictureInformationListener" />
+            name="mainViewModel"
+            type="dev.sasikanth.nasa.apod.ui.MainViewModel" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -43,9 +44,9 @@
             android:layout_gravity="end"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:onClick="@{() -> mainViewModel.downLoadImage()}"
             android:contentDescription="@string/cd_picture_download"
             android:focusable="true"
-            android:onClick="@{() -> pictureInformationListener.downloadImage(aPod.title, aPod.hdUrl)}"
             android:padding="16dp"
             app:marginRightSystemWindowInsets="@{true}"
             app:marginTopSystemWindowInsets="@{true}"
@@ -59,13 +60,14 @@
             android:background="@drawable/ic_gradient_background"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{() -> mainViewModel.showImageInfo()}"
             android:foreground="?attr/selectableItemBackground"
-            android:onClick="@{() -> pictureInformationListener.showPictureInformation(aPod)}"
             android:paddingStart="0dp"
             android:paddingTop="16dp"
             android:paddingEnd="24dp"
             android:paddingBottom="15dp"
-            app:paddingBottomSystemWindowInsets="@{true}">
+            app:paddingBottomSystemWindowInsets="@{true}"
+            tools:targetApi="m">
 
             <ImageView
                 android:id="@+id/expand_picture_information"
@@ -77,9 +79,9 @@
                 android:layout_marginBottom="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:onClick="@{() -> mainViewModel.showImageInfo()}"
                 android:contentDescription="@string/cd_picture_information"
                 android:focusable="true"
-                android:onClick="@{() -> pictureInformationListener.showPictureInformation(aPod)}"
                 android:src="@drawable/ic_arrow_expand"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/picture_title"

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.databinding.library.baseAdapters.BR.mainViewModel
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -23,14 +24,10 @@ import dev.sasikanth.nasa.apod.ui.MainActivity
 import dev.sasikanth.nasa.apod.ui.MainViewModel
 import dev.sasikanth.nasa.apod.ui.adapters.ViewerAdapter
 import dev.sasikanth.nasa.apod.utils.ZoomOutPageTransformer
+import dev.sasikanth.nasa.apod.utils.extensions.observe
 
-// This can be moved into ViewModel as an single event live data
-interface PictureInformationListener {
-    fun showPictureInformation(aPod: APod)
-    fun downloadImage(pictureName: String, downloadUrl: String?)
-}
 
-class ViewerFragment : Fragment(), PictureInformationListener {
+class ViewerFragment : Fragment() {
 
     companion object {
         private const val STORAGE_PERMISSION_REQUEST_CODE = 1001
@@ -60,9 +57,10 @@ class ViewerFragment : Fragment(), PictureInformationListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentViewerBinding.inflate(inflater)
-        binding.pictureInformationListener = this
-        binding.lifecycleOwner = this
+        binding = FragmentViewerBinding.inflate(inflater).apply {
+            lifecycleOwner = this@ViewerFragment
+            mainViewModel = viewModel
+        }
 
         val viewerAdapter = ViewerAdapter()
 
@@ -94,9 +92,21 @@ class ViewerFragment : Fragment(), PictureInformationListener {
 
         binding.apodsViewer.transitionName = "${MainActivity.currentPosition}"
 
+        observe(viewModel.downloadEvent) {
+            binding.aPod?.let {
+                downloadImage(it.title, it.hdUrl)
+            }
+        }
+
+        observe(viewModel.showInfoEvent) {
+            binding.aPod?.let {
+                showPictureInformation(it)
+            }
+        }
+
         return binding.root
     }
-    
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -106,9 +116,7 @@ class ViewerFragment : Fragment(), PictureInformationListener {
             STORAGE_PERMISSION_REQUEST_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // Permission granted, download image
-                    binding.aPod?.let {
-                        downloadImage(it.title, it.hdUrl)
-                    }
+                    viewModel.downloadEvent.call()
                 } else {
                     // Permission not granted
                     Toast.makeText(
@@ -122,11 +130,11 @@ class ViewerFragment : Fragment(), PictureInformationListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    override fun showPictureInformation(aPod: APod) {
+    private fun showPictureInformation(aPod: APod) {
         findNavController().navigate(ViewerFragmentDirections.actionPictureInformation(aPod))
     }
 
-    override fun downloadImage(pictureName: String, downloadUrl: String?) {
+    private fun downloadImage(pictureName: String, downloadUrl: String?) {
         if (allPermissionsGranted()) {
             // Storage permission is granted, trigger download service
             PictureDownloadService.startService(requireContext(), pictureName, downloadUrl)
